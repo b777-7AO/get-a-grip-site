@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get a Grip: Boulderwände in 3D, Route für Route</title>
+<meta name="description" content="Get a Grip scannt eure Boulderwand und macht daraus ein 3D-Modell im Browser, in dem jede Farbe eine Route ist. Für Hallen, Schrauberteams und Kletternde.">
+<meta name="theme-color" content="#0D0F12">
+<meta property="og:title" content="Get a Grip: Boulderwände in 3D, Route für Route">
+<meta property="og:description" content="Wir scannen eure Wand. Ihr bekommt ein 3D-Modell, in dem jede Farbe eine Route ist.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter+Tight:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23FFC61E'/><circle cx='16' cy='16' r='5' fill='%230D0F12'/></svg>">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Get a Grip, Startseite">
+    <span class="brand__mark" aria-hidden="true"></span>
+    <span class="brand__name">Get a Grip</span>
+  </a>
+  <nav class="topnav" aria-label="Hauptnavigation">
+    <a href="#produkt">Produkt</a>
+    <a href="#ablauf">Ablauf</a>
+    <a href="#technik">Technik</a>
+    <a href="#pilot">Pilotphase</a>
+  </nav>
+  <a class="btn btn--tape topbar__cta" href="#kontakt">Wand scannen lassen</a>
+</header>
+
+<main id="inhalt">
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero__text">
+    <p class="eyebrow">3D-Scans für Boulderhallen</p>
+    <h1>Jede Route<br>eurer Wand.<br><em>Einmal drehbar.</em></h1>
+    <p class="lede">Wir scannen eure Boulderwand und bauen daraus ein 3D-Modell, das im Browser läuft. Jede Griff-Farbe ist eine eigene Route: anwählen, alles andere tritt zurück, die Linie steht.</p>
+    <div class="hero__actions">
+      <a class="btn btn--tape" href="#kontakt">Scan anfragen</a>
+      <a class="btn btn--ghost" href="https://julianito03.github.io/get-a-grip/" target="_blank" rel="noopener">
+        Echtes Modell ansehen
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14"><path d="M3 13 13 3M6 3h7v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <figure class="wall" aria-labelledby="wall-cap">
+    <div class="wall__frame">
+      <svg class="wall__svg" viewBox="0 0 1000 640" role="img" aria-label="Schematische Boulderwand mit farbigen Griffen. Eine Farbe lässt sich auswählen, die übrigen treten zurück.">
+        <defs>
+          <linearGradient id="panelA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#22262C"/><stop offset="1" stop-color="#14171B"/>
+          </linearGradient>
+          <linearGradient id="panelB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1B1F24"/><stop offset="1" stop-color="#0E1114"/>
+          </linearGradient>
+          <linearGradient id="panelC" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#191D22"/><stop offset="1" stop-color="#0B0D10"/>
+          </linearGradient>
+        </defs>
+        <g class="wall__layer" data-depth="6">
+          <polygon points="0,44 318,4 424,614 0,636" fill="url(#panelA)"/>
+          <polygon points="318,4 556,66 556,606 424,614" fill="url(#panelB)"/>
+          <polygon points="556,66 762,12 736,618 556,606" fill="url(#panelA)"/>
+          <polygon points="762,12 1000,70 1000,608 736,618" fill="url(#panelC)"/>
+          <polygon points="318,4 424,614 556,606 556,66" fill="#fff" opacity="0.03"/>
+        </g>
+        <g class="wall__layer" data-depth="14">
+          <!-- große Volumen: zwei Flächen pro Körper, damit die Kante sichtbar bleibt -->
+          <polygon points="600,232 712,198 684,300" fill="#C79A22"/>
+          <polygon points="600,232 684,300 636,352" fill="#8A6B14"/>
+          <polygon points="684,300 636,352 700,330" fill="#6B520E"/>
+          <polygon points="196,346 300,312 276,404" fill="#B88E1F"/>
+          <polygon points="196,346 276,404 232,452" fill="#7E620F"/>
+          <polygon points="864,392 946,368 930,452" fill="#A98420"/>
+          <polygon points="864,392 930,452 892,486" fill="#71570D"/>
+        </g>
+        <g class="wall__holds wall__layer" data-depth="22"></g>
+      </svg>
+      <div class="wall__grain" aria-hidden="true"></div>
+    </div>
+
+    <figcaption class="wall__ui" id="wall-cap">
+      <div class="chips" role="group" aria-label="Route nach Farbe wählen">
+        <button type="button" class="chip is-active" data-route="alle"><span class="chip__dot chip__dot--all" aria-hidden="true"></span>Alle</button>
+        <button type="button" class="chip" data-route="gelb"><span class="chip__dot" style="--c:var(--r-gelb)" aria-hidden="true"></span>Gelb</button>
+        <button type="button" class="chip" data-route="gruen"><span class="chip__dot" style="--c:var(--r-gruen)" aria-hidden="true"></span>Grün</button>
+        <button type="button" class="chip" data-route="blau"><span class="chip__dot" style="--c:var(--r-blau)" aria-hidden="true"></span>Blau</button>
+        <button type="button" class="chip" data-route="pink"><span class="chip__dot" style="--c:var(--r-pink)" aria-hidden="true"></span>Pink</button>
+        <button type="button" class="chip" data-route="lila"><span class="chip__dot" style="--c:var(--r-lila)" aria-hidden="true"></span>Lila</button>
+      </div>
+      <p class="wall__readout" aria-live="polite"><span data-readout-count>128</span> Griffe sichtbar <span class="sep" aria-hidden="true">/</span> <span data-readout-route>alle Routen</span></p>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- PRODUKT -->
+<section class="band band--chalk" id="produkt">
+  <div class="wrap">
+    <div class="secthead">
+      <span class="tag" style="--c:var(--r-gelb)" aria-hidden="true">01</span>
+      <h2>Die Wand ist das Interface</h2>
+      <p class="secthead__lede">Topos sind Fotos mit Kreisen drauf. Ein Scan ist die Wand selbst: gleiche Tiefe, gleiche Volumen, gleiche Griffe an derselben Stelle.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Farbe gleich Route</h3>
+        <p>Das Modell kennt jeden Griff einzeln und weiß, zu welcher Farbe er gehört. Route wählen heißt: diese Griffe bleiben, der Rest wird ruhig. Kein Ratespiel am Fuß der Wand.</p>
+      </article>
+      <article class="card">
+        <h3>Volumen bleiben Volumen</h3>
+        <p>Die großen Bauteile, Prow, Dachkante, Kanten der Überhänge, stehen als echte Geometrie im Modell. Man sieht, ob eine Linie um die Kante geht, bevor man einsteigt.</p>
+      </article>
+      <article class="card">
+        <h3>Läuft überall</h3>
+        <p>Ein Link im Browser, am Handy im Bouldercafé genauso wie auf dem Bildschirm am Empfang. Keine App, kein Login, kein Download.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ABLAUF -->
+<section class="band band--wall" id="ablauf">
+  <div class="wrap">
+    <div class="secthead secthead--invert">
+      <span class="tag" style="--c:var(--r-gruen)" aria-hidden="true">02</span>
+      <h2>Vom Schraubtag zum Modell</h2>
+      <p class="secthead__lede">Vier Schritte, in dieser Reihenfolge. Der Aufwand bei euch liegt komplett im ersten.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step__no">Schritt 1</span>
+        <h3>Aufnahme in der Halle</h3>
+        <p>Ein Durchgang mit der Kamera, gerade und schräg über jede Wandfläche, dazu Nahaufnahmen der Volumen. Eine Sektion braucht rund 20 Minuten. Betrieb kann weiterlaufen, wir arbeiten uns um die Leute herum.</p>
+      </li>
+      <li class="step">
+        <span class="step__no">Schritt 2</span>
+        <h3>Rekonstruktion</h3>
+        <p>Aus den Aufnahmen entsteht die Geometrie der Wand mit Textur: Fläche, Neigung, Volumen, jeder Griff mit seiner echten Form und Position.</p>
+      </li>
+      <li class="step">
+        <span class="step__no">Schritt 3</span>
+        <h3>Routen-Layer</h3>
+        <p>Jeder Griff bekommt seine Route. Farben, die sich mit der Wand beißen, also Schwarz, Grau und Beige, prüfen wir von Hand nach, statt sie zu raten.</p>
+      </li>
+      <li class="step">
+        <span class="step__no">Schritt 4</span>
+        <h3>Veröffentlichen</h3>
+        <p>Ihr bekommt einen Link und einen Einbettcode für eure Seite. Nach dem nächsten Umschrauben aktualisieren wir die betroffene Sektion.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- TECHNIK -->
+<section class="band band--chalk" id="technik">
+  <div class="wrap tech">
+    <div class="secthead">
+      <span class="tag" style="--c:var(--r-blau)" aria-hidden="true">03</span>
+      <h2>Was drin steckt</h2>
+      <p class="secthead__lede">Damit klar ist, worüber wir reden, wenn wir Scan sagen.</p>
+    </div>
+
+    <dl class="specs">
+      <div><dt>Aufnahme</dt><dd>100 bis 200 Fotos pro Sektion, 70 bis 80 Prozent Überlappung, feste Brennweite</dd></div>
+      <div><dt>Ergebnis</dt><dd>GLB-Modell mit eingebetteter Textur, jeder Griff als eigenes Objekt</dd></div>
+      <div><dt>Routen</dt><dd>Gelb, Grün, Blau, Pink, Lila, Beige, Grau, Schwarz als getrennte Layer</dd></div>
+      <div><dt>Viewer</dt><dd>WebGL im Browser, Drehen, Zoomen, Route isolieren, Griff antippen</dd></div>
+      <div><dt>Ausgabe</dt><dd>Öffentlicher Link, iframe-Einbettung, Modelldatei zur eigenen Nutzung</dd></div>
+      <div><dt>Aktualisierung</dt><dd>Sektionsweise nach jedem Umschrauben</dd></div>
+    </dl>
+
+    <aside class="proof">
+      <p class="proof__label">Referenz</p>
+      <p class="proof__text">Die erste Wand ist gescannt, gebaut und online. Dreht sie, wählt eine Farbe, seht was der Scan hergibt.</p>
+      <a class="btn btn--dark" href="https://julianito03.github.io/get-a-grip/" target="_blank" rel="noopener">
+        Modell öffnen
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14"><path d="M3 13 13 3M6 3h7v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </aside>
+  </div>
+</section>
+
+<!-- PILOT -->
+<section class="band band--wall" id="pilot">
+  <div class="wrap">
+    <div class="secthead secthead--invert">
+      <span class="tag" style="--c:var(--r-pink)" aria-hidden="true">04</span>
+      <h2>Pilotphase 2026</h2>
+      <p class="secthead__lede">Wir nehmen eine kleine Zahl an Hallen auf, die ihre Wand als Erste in 3D zeigen wollen. Feste Konditionen, offener Austausch, ihr redet direkt mit dem, der es baut.</p>
+    </div>
+
+    <div class="pilot">
+      <div class="pilot__col">
+        <h3>Ihr bekommt</h3>
+        <ul class="list">
+          <li>Eine gescannte Wandsektion eurer Wahl</li>
+          <li>Öffentlichen Viewer mit Routenfilter</li>
+          <li>Einbettung auf eurer Website</li>
+          <li>Eine Aktualisierung nach dem ersten Umschrauben</li>
+        </ul>
+      </div>
+      <div class="pilot__col">
+        <h3>Wir brauchen</h3>
+        <ul class="list">
+          <li>Zwei Stunden Zugang zur Wand, gern früh</li>
+          <li>Eine Ansprechperson aus dem Schrauberteam</li>
+          <li>Die Erlaubnis, das Ergebnis zu zeigen</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="band band--tape" id="kontakt">
+  <div class="wrap contact">
+    <div>
+      <h2>Zeigt mir eure Wand.</h2>
+      <p class="contact__lede">Schreibt kurz, welche Halle, welche Sektion und wann bei euch wenig los ist. Antwort kommt am selben Tag.</p>
+    </div>
+    <div class="contact__actions">
+      <a class="btn btn--dark btn--lg" href="mailto:juliandegen4@gmail.com?subject=Get%20a%20Grip%3A%20Scan-Anfrage&amp;body=Halle%3A%0AWandsektion%3A%0ARuhige%20Zeiten%3A%0AAnsprechperson%3A">E-Mail schreiben</a>
+      <p class="contact__mail"><a href="mailto:juliandegen4@gmail.com">juliandegen4@gmail.com</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="foot__brand">Get a Grip</p>
+    <nav class="foot__nav" aria-label="Fußzeile">
+      <a href="#produkt">Produkt</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#technik">Technik</a>
+      <a href="https://julianito03.github.io/get-a-grip/" target="_blank" rel="noopener">Live-Modell</a>
+    </nav>
+    <p class="foot__legal">Impressum und Datenschutz folgen vor dem Livegang.</p>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
