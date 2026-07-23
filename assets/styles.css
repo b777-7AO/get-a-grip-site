@@ -134,6 +134,17 @@ a { color: inherit; }
 
 /* ---------- Wall figure ---------- */
 .wall { margin: clamp(32px, 4vw, 56px) 0 0; }
+.wall__tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+.wall__tab {
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em;
+  background: transparent; color: rgba(239,236,228,.55);
+  border: 1px solid rgba(239,236,228,.22); border-radius: 8px;
+  padding: 8px 14px; cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background-color .2s ease;
+}
+.wall__tab:hover { color: var(--chalk); border-color: rgba(239,236,228,.45); }
+.wall__tab.is-active { background: var(--tape); border-color: var(--tape); color: var(--ink); }
+.wall__frame--train { max-width: 780px; margin-inline: auto; }
 .wall__frame {
   position: relative;
   border-radius: 18px;

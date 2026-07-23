@@ -50,6 +50,10 @@
   </div>
 
   <figure class="wall" aria-labelledby="wall-cap">
+    <div class="wall__tabs" role="tablist" aria-label="Wandsektion wählen">
+      <button type="button" class="wall__tab is-active" role="tab" aria-selected="true" data-wall="halle">Sektion 1: Überhang-Bucht</button>
+      <button type="button" class="wall__tab" role="tab" aria-selected="false" data-wall="training">Sektion 2: Trainingswand</button>
+    </div>
     <div class="wall__frame">
       <svg class="wall__svg" viewBox="0 0 1800 640" role="img" aria-label="Schematische Ansicht der gescannten Boulderwand: fünf Paneele mit farbigen Griffen und gelben Volumen. Eine Farbe lässt sich auswählen, die übrigen treten zurück.">
         <defs>
@@ -71,6 +75,12 @@
           <linearGradient id="volDark" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#2C3138"/><stop offset="1" stop-color="#14171B"/>
           </linearGradient>
+          <linearGradient id="birchA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#EADDBF"/><stop offset="1" stop-color="#DECDA7"/>
+          </linearGradient>
+          <linearGradient id="birchB" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#E6D8B8"/><stop offset="1" stop-color="#D9C8A2"/>
+          </linearGradient>
           <radialGradient id="chalk">
             <stop offset="0" stop-color="#EFECE4" stop-opacity="0.10"/>
             <stop offset="0.6" stop-color="#EFECE4" stop-opacity="0.04"/>
@@ -85,16 +95,7 @@
     </div>
 
     <figcaption class="wall__ui" id="wall-cap">
-      <div class="chips" role="group" aria-label="Route nach Farbe wählen">
-        <button type="button" class="chip is-active" data-route="alle"><span class="chip__dot chip__dot--all" aria-hidden="true"></span>Alle</button>
-        <button type="button" class="chip" data-route="gelb"><span class="chip__dot" style="--c:var(--r-gelb)" aria-hidden="true"></span>Gelb</button>
-        <button type="button" class="chip" data-route="gruen"><span class="chip__dot" style="--c:var(--r-gruen)" aria-hidden="true"></span>Grün</button>
-        <button type="button" class="chip" data-route="blau"><span class="chip__dot" style="--c:var(--r-blau)" aria-hidden="true"></span>Blau</button>
-        <button type="button" class="chip" data-route="pink"><span class="chip__dot" style="--c:var(--r-pink)" aria-hidden="true"></span>Pink</button>
-        <button type="button" class="chip" data-route="lila"><span class="chip__dot" style="--c:var(--r-lila)" aria-hidden="true"></span>Lila</button>
-        <button type="button" class="chip" data-route="beige"><span class="chip__dot" style="--c:var(--r-beige)" aria-hidden="true"></span>Beige</button>
-        <button type="button" class="chip" data-route="schwarz"><span class="chip__dot chip__dot--schwarz" aria-hidden="true"></span>Schwarz</button>
-      </div>
+      <div class="chips" role="group" aria-label="Route nach Farbe wählen"></div>
       <p class="wall__readout" aria-live="polite"><span data-readout-count>0</span> Griffe sichtbar <span class="sep" aria-hidden="true">/</span> <span data-readout-route>alle Routen</span></p>
     </figcaption>
   </figure>
