@@ -1,122 +1,139 @@
-/* Get a Grip: hero wall, route filter, parallax, reveal */
+/* Get a Grip: photo-traced hero wall, route filter, parallax, reveal */
 (function () {
   "use strict";
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var SVGNS = "http://www.w3.org/2000/svg";
 
-  /* deterministic pseudo-random so the wall is the same wall on every visit */
-  function rng(seed) {
-    var s = seed >>> 0;
-    return function () {
-      s = (s * 1664525 + 1013904223) >>> 0;
-      return s / 4294967296;
-    };
+  var COLORS = {
+    gelb: "#FFC61E", gruen: "#48C46B", blau: "#3D8DFF", pink: "#FF4F9C",
+    lila: "#9B6BFF", beige: "#D9C7A3", grau: "#7A8089", schwarz: "#31363D"
+  };
+  var RING = { schwarz: "#D7DCE2", grau: "#EFECE4" };
+  var LABEL = {
+    alle: "alle Routen", gelb: "Route Gelb", gruen: "Route Grün", blau: "Route Blau",
+    pink: "Route Pink", lila: "Route Lila", beige: "Route Beige", schwarz: "Route Schwarz"
+  };
+  /* grey holds count toward Beige (beige/grau layer), like in the scan */
+  function routeOf(c) { return c === "grau" ? "beige" : c; }
+
+  function el(name, attrs, parent) {
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
   }
 
-  var ROUTES = [
-    { key: "gelb",  color: "#FFC61E", start: 0.16, drift: 0.055, count: 11 },
-    { key: "gruen", color: "#48C46B", start: 0.34, drift: -0.04, count: 12 },
-    { key: "blau",  color: "#3D8DFF", start: 0.52, drift: 0.07,  count: 10 },
-    { key: "pink",  color: "#FF4F9C", start: 0.70, drift: -0.05, count: 11 },
-    { key: "lila",  color: "#9B6BFF", start: 0.86, drift: -0.09, count: 9 }
-  ];
+  function buildWall() {
+    var panelsG = document.querySelector(".wall__panels");
+    var volsG = document.querySelector(".wall__vols");
+    var holdsG = document.querySelector(".wall__holds");
+    if (!panelsG || typeof WALL_DATA === "undefined") return null;
 
-  var W = 1000, H = 640;
+    /* panels: alternating gradients, corner slivers darkest */
+    var FILL = { A0: "url(#panelDim)", A: "url(#panelA)", B: "url(#panelB)", C: "url(#panelA)", D: "url(#panelC)", E: "url(#panelB)", ER: "url(#panelDim)" };
+    var order = ["A0", "A", "B", "C", "D", "E", "ER"];
+    order.forEach(function (key) {
+      var q = WALL_DATA.panels[key];
+      el("polygon", { points: q.map(function (p) { return p[0] + "," + p[1]; }).join(" "), fill: FILL[key] }, panelsG);
+    });
+    /* fold highlights */
+    order.slice(1).forEach(function (key) {
+      var q = WALL_DATA.panels[key];
+      el("line", { x1: q[0][0], y1: q[0][1], x2: q[3][0], y2: q[3][1], stroke: "#fff", "stroke-opacity": "0.05", "stroke-width": "2" }, panelsG);
+    });
+    /* chalk clouds, roughly where the photos show heavy traffic */
+    [[250, 320, 95, 55, -15], [330, 540, 80, 45, 10], [520, 190, 130, 65, -25],
+     [610, 430, 95, 60, 15], [700, 300, 80, 90, 0], [880, 210, 150, 85, -10],
+     [850, 520, 115, 60, 20], [1050, 140, 90, 55, 0], [1250, 310, 125, 70, -20],
+     [1190, 560, 95, 50, 10], [1420, 200, 90, 60, 0], [1570, 430, 105, 60, -12]
+    ].forEach(function (c) {
+      el("ellipse", { cx: c[0], cy: c[1], rx: c[2], ry: c[3], transform: "rotate(" + c[4] + " " + c[0] + " " + c[1] + ")", fill: "url(#chalk)" }, panelsG);
+    });
+    /* floor mat */
+    el("rect", { x: 0, y: 606, width: 1800, height: 34, fill: "#2E3136" }, panelsG);
+    el("rect", { x: 0, y: 606, width: 1800, height: 5, fill: "#000", opacity: "0.35" }, panelsG);
 
-  function buildHolds(group) {
-    var rand = rng(20260721);
-    var holds = [];
-
-    ROUTES.forEach(function (route, ri) {
-      var r = rng(1000 + ri * 37);
-      for (var i = 0; i < route.count; i++) {
-        var t = i / (route.count - 1);
-        var x = (route.start + route.drift * t + (r() - 0.5) * 0.075) * W;
-        var y = H - 60 - t * (H - 210) + (r() - 0.5) * 46;
-        holds.push({
-          route: route.key,
-          color: route.color,
-          x: Math.max(38, Math.min(W - 38, x)),
-          y: Math.max(46, Math.min(H - 34, y)),
-          rx: 7 + r() * 7,
-          ry: 5 + r() * 5,
-          rot: r() * 180
-        });
+    /* volumes */
+    WALL_DATA.volumes.forEach(function (v) {
+      var g = el("g", { transform: "translate(" + v.x + " " + v.y + ") rotate(" + v.rot + ")" });
+      if (v.k === "fan") {
+        /* circular quarter-pie: corner offset so (x,y) is the visual centre */
+        var r = (v.r + v.r2) / 2, a = 0.45 * r;
+        var d = "M" + (-a) + " " + (-a) + " L" + (r - a) + " " + (-a) +
+                " A" + r + " " + r + " 0 0 1 " + (-a) + " " + (r - a) + " Z";
+        g.setAttribute("class", "hold vol--route");
+        g.setAttribute("data-route", "gelb");
+        el("path", { d: d, fill: "url(#volYellow)", stroke: "#7A5C0B", "stroke-width": "1.5" }, g);
+        if (v.seam) el("line", { x1: -a, y1: -a, x2: 0.68 * r - a, y2: 0.68 * r - a, stroke: "#0D0F12", "stroke-width": "3", "stroke-opacity": "0.75" }, g);
+        el("circle", { "class": "hold__ring", r: r * 0.72, cx: 0.12 * r, cy: 0.12 * r, fill: "none", stroke: COLORS.gelb, "stroke-width": "2.5" }, g);
+      } else if (v.k === "half") {
+        /* half-disc: flat edge through the centre, arc bulging to +x */
+        var hr = (v.r + v.r2) / 2;
+        g.setAttribute("class", "hold vol--route");
+        g.setAttribute("data-route", "gelb");
+        el("path", { d: "M0 " + (-hr) + " A" + hr + " " + hr + " 0 0 1 0 " + hr + " Z", fill: "url(#volYellow)", stroke: "#7A5C0B", "stroke-width": "1.5" }, g);
+        if (v.seam) el("line", { x1: 0, y1: 0, x2: hr * 0.95, y2: hr * 0.12, stroke: "#0D0F12", "stroke-width": "3", "stroke-opacity": "0.7" }, g);
+        el("circle", { "class": "hold__ring", r: hr * 0.8, cx: hr * 0.3, fill: "none", stroke: COLORS.gelb, "stroke-width": "2.5" }, g);
+      } else if (v.k === "leaf" || v.k === "lens") {
+        var rx = v.r, ry = v.r2;
+        g.setAttribute("class", "hold vol--route");
+        g.setAttribute("data-route", "gelb");
+        el("path", { d: "M" + (-rx) + " 0 C" + (-rx * 0.3) + " " + (-ry) + " " + (rx * 0.3) + " " + (-ry) + " " + rx + " 0 C" + (rx * 0.3) + " " + ry + " " + (-rx * 0.3) + " " + ry + " " + (-rx) + " 0 Z", fill: "url(#volYellow)", stroke: "#7A5C0B", "stroke-width": "1.5" }, g);
+        if (v.seam) el("line", { x1: -rx * 0.55, y1: ry * 0.4, x2: rx * 0.6, y2: -ry * 0.45, stroke: "#0D0F12", "stroke-width": "3", "stroke-opacity": "0.7" }, g);
+        el("circle", { "class": "hold__ring", r: Math.max(rx, ry) + 8, fill: "none", stroke: COLORS.gelb, "stroke-width": "2.5" }, g);
+      } else if (v.k === "pyr") {
+        var w = v.r, h = v.r2;
+        g.setAttribute("class", "vol");
+        el("polygon", { points: (-w) + "," + (h * 0.62) + " 0," + (-h) + " " + w + "," + (h * 0.7), fill: "url(#volDark)", stroke: "#000", "stroke-opacity": "0.4", "stroke-width": "1" }, g);
+        el("polygon", { points: "0," + (-h) + " " + w + "," + (h * 0.7) + " " + (w * 0.2) + "," + (h * 0.74), fill: "#0B0D10", opacity: "0.8" }, g);
+      } else { /* dome */
+        g.setAttribute("class", "vol");
+        el("ellipse", { rx: v.r, ry: v.r2 * 0.8, fill: "url(#volDark)", stroke: "#000", "stroke-opacity": "0.4" }, g);
+        el("ellipse", { rx: v.r * 0.45, ry: v.r2 * 0.3, cx: -v.r * 0.2, cy: -v.r2 * 0.25, fill: "#fff", opacity: "0.06" }, g);
       }
+      volsG.appendChild(g);
     });
 
-    /* neutral holds: on a real wall most of what you see is not your route */
-    for (var n = 0; n < 46; n++) {
-      holds.push({
-        route: "neutral",
-        color: n % 3 === 0 ? "#D9C7A3" : "#6E747D",
-        x: 40 + rand() * (W - 80),
-        y: 50 + rand() * (H - 100),
-        rx: 5 + rand() * 6,
-        ry: 4 + rand() * 4,
-        rot: rand() * 180
+    /* holds */
+    WALL_DATA.holds.forEach(function (hh) {
+      var g = el("g", {
+        "class": "hold", "data-route": routeOf(hh.c),
+        transform: "translate(" + hh.x + " " + hh.y + ") rotate(" + hh.rot + ")"
       });
-    }
-
-    holds.forEach(function (h) {
-      var g = document.createElementNS(SVGNS, "g");
-      g.setAttribute("class", "hold");
-      g.setAttribute("data-route", h.route);
-      g.setAttribute("transform", "translate(" + h.x.toFixed(1) + " " + h.y.toFixed(1) + ") rotate(" + h.rot.toFixed(0) + ")");
-
-      var ring = document.createElementNS(SVGNS, "circle");
-      ring.setAttribute("class", "hold__ring");
-      ring.setAttribute("r", (Math.max(h.rx, h.ry) + 9).toFixed(1));
-      ring.setAttribute("fill", "none");
-      ring.setAttribute("stroke", h.color);
-      ring.setAttribute("stroke-width", "2");
-      g.appendChild(ring);
-
-      var body = document.createElementNS(SVGNS, "ellipse");
-      body.setAttribute("rx", h.rx.toFixed(1));
-      body.setAttribute("ry", h.ry.toFixed(1));
-      body.setAttribute("fill", h.color);
-      g.appendChild(body);
-
-      var light = document.createElementNS(SVGNS, "ellipse");
-      light.setAttribute("rx", (h.rx * 0.52).toFixed(1));
-      light.setAttribute("ry", (h.ry * 0.46).toFixed(1));
-      light.setAttribute("cx", (-h.rx * 0.22).toFixed(1));
-      light.setAttribute("cy", (-h.ry * 0.26).toFixed(1));
-      light.setAttribute("fill", "#ffffff");
-      light.setAttribute("opacity", "0.22");
-      g.appendChild(light);
-
-      group.appendChild(g);
+      var color = COLORS[hh.c];
+      el("circle", { "class": "hold__ring", r: Math.max(hh.rx, hh.ry) + 8, fill: "none", stroke: RING[hh.c] || color, "stroke-width": "2" }, g);
+      if (hh.s === "lens") {
+        el("path", { d: "M" + (-hh.rx) + " 0 C" + (-hh.rx * 0.3) + " " + (-hh.ry) + " " + (hh.rx * 0.3) + " " + (-hh.ry) + " " + hh.rx + " 0 C" + (hh.rx * 0.3) + " " + hh.ry + " " + (-hh.rx * 0.3) + " " + hh.ry + " " + (-hh.rx) + " 0 Z", fill: color }, g);
+      } else {
+        el("ellipse", { rx: hh.rx, ry: hh.ry, fill: color }, g);
+      }
+      el("ellipse", { rx: hh.rx * 0.5, ry: hh.ry * 0.42, cx: -hh.rx * 0.22, cy: -hh.ry * 0.28, fill: "#fff", opacity: hh.c === "schwarz" ? "0.12" : "0.22" }, g);
+      holdsG.appendChild(g);
     });
 
-    return holds;
+    return holdsG;
   }
 
-  var group = document.querySelector(".wall__holds");
+  var group = buildWall();
   if (group) {
-    var holds = buildHolds(group);
-    var total = holds.length;
+    var routed = Array.prototype.slice.call(document.querySelectorAll(".wall__vols .hold, .wall__holds .hold"));
+    var total = routed.length;
     var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
     var countOut = document.querySelector("[data-readout-count]");
     var routeOut = document.querySelector("[data-readout-route]");
-    var LABEL = { alle: "alle Routen", gelb: "Route Gelb", gruen: "Route Grün", blau: "Route Blau", pink: "Route Pink", lila: "Route Lila" };
+    var svg = document.querySelector(".wall__svg");
 
     function select(key) {
       var visible = total;
-      if (key === "alle") {
-        group.classList.remove("is-filtered");
-        Array.prototype.forEach.call(group.children, function (el) { el.classList.remove("is-on"); });
-      } else {
-        group.classList.add("is-filtered");
-        visible = 0;
-        Array.prototype.forEach.call(group.children, function (el) {
-          var on = el.getAttribute("data-route") === key;
-          el.classList.toggle("is-on", on);
-          if (on) visible++;
-        });
-      }
+      var filtered = key !== "alle";
+      svg.classList.toggle("is-filtered", filtered);
+      if (filtered) visible = 0;
+      routed.forEach(function (n) {
+        var on = !filtered || n.getAttribute("data-route") === key;
+        n.classList.toggle("is-on", filtered && on);
+        if (filtered && on) visible++;
+      });
       countOut.textContent = visible;
       routeOut.textContent = LABEL[key] || key;
       chips.forEach(function (c) {
@@ -131,17 +148,18 @@
       c.addEventListener("click", function () { select(c.getAttribute("data-route")); });
     });
 
-    group.addEventListener("click", function (e) {
+    svg.addEventListener("click", function (e) {
       var hold = e.target.closest(".hold");
       if (!hold) return;
-      var key = hold.getAttribute("data-route");
-      select(key === "neutral" ? "alle" : key);
+      select(hold.getAttribute("data-route"));
     });
 
-    select("alle");
+    /* deep link: #gruen etc. selects a route on load */
+    var initial = (location.hash || "").replace("#", "");
+    select(LABEL[initial] && initial !== "alle" ? initial : "alle");
   }
 
-  /* parallax: the panels sit at different depths, like the real prow */
+  /* parallax: panel, volume and hold layers at different depths */
   var frame = document.querySelector(".wall__frame");
   if (frame && !reduced && window.matchMedia("(pointer: fine)").matches) {
     var layers = Array.prototype.slice.call(frame.querySelectorAll(".wall__layer"));

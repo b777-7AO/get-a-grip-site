@@ -38,8 +38,8 @@
 <section class="hero" id="top">
   <div class="hero__text">
     <p class="eyebrow">3D-Scans für Boulderhallen</p>
-    <h1>Jede Route<br>eurer Wand.<br><em>Einmal drehbar.</em></h1>
-    <p class="lede">Wir scannen eure Boulderwand und bauen daraus ein 3D-Modell, das im Browser läuft. Jede Griff-Farbe ist eine eigene Route: anwählen, alles andere tritt zurück, die Linie steht.</p>
+    <h1>Jede Route<br>eurer Wand. <em>Einmal drehbar.</em></h1>
+    <p class="lede">Wir scannen eure Boulderwand und bauen daraus ein 3D-Modell, das im Browser läuft. Jede Griff-Farbe ist eine eigene Route: anwählen, alles andere tritt zurück, die Linie steht. Unten: die erste gescannte Wand, Griff für Griff aus den Fotos übertragen.</p>
     <div class="hero__actions">
       <a class="btn btn--tape" href="#kontakt">Scan anfragen</a>
       <a class="btn btn--ghost" href="https://julianito03.github.io/get-a-grip/" target="_blank" rel="noopener">
@@ -51,7 +51,7 @@
 
   <figure class="wall" aria-labelledby="wall-cap">
     <div class="wall__frame">
-      <svg class="wall__svg" viewBox="0 0 1000 640" role="img" aria-label="Schematische Boulderwand mit farbigen Griffen. Eine Farbe lässt sich auswählen, die übrigen treten zurück.">
+      <svg class="wall__svg" viewBox="0 0 1800 640" role="img" aria-label="Schematische Ansicht der gescannten Boulderwand: fünf Paneele mit farbigen Griffen und gelben Volumen. Eine Farbe lässt sich auswählen, die übrigen treten zurück.">
         <defs>
           <linearGradient id="panelA" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#22262C"/><stop offset="1" stop-color="#14171B"/>
@@ -62,24 +62,23 @@
           <linearGradient id="panelC" x1="1" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#191D22"/><stop offset="1" stop-color="#0B0D10"/>
           </linearGradient>
+          <linearGradient id="panelDim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#121519"/><stop offset="1" stop-color="#08090B"/>
+          </linearGradient>
+          <linearGradient id="volYellow" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F5BE1D"/><stop offset="1" stop-color="#B4860F"/>
+          </linearGradient>
+          <linearGradient id="volDark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2C3138"/><stop offset="1" stop-color="#14171B"/>
+          </linearGradient>
+          <radialGradient id="chalk">
+            <stop offset="0" stop-color="#EFECE4" stop-opacity="0.10"/>
+            <stop offset="0.6" stop-color="#EFECE4" stop-opacity="0.04"/>
+            <stop offset="1" stop-color="#EFECE4" stop-opacity="0"/>
+          </radialGradient>
         </defs>
-        <g class="wall__layer" data-depth="6">
-          <polygon points="0,44 318,4 424,614 0,636" fill="url(#panelA)"/>
-          <polygon points="318,4 556,66 556,606 424,614" fill="url(#panelB)"/>
-          <polygon points="556,66 762,12 736,618 556,606" fill="url(#panelA)"/>
-          <polygon points="762,12 1000,70 1000,608 736,618" fill="url(#panelC)"/>
-          <polygon points="318,4 424,614 556,606 556,66" fill="#fff" opacity="0.03"/>
-        </g>
-        <g class="wall__layer" data-depth="14">
-          <!-- große Volumen: zwei Flächen pro Körper, damit die Kante sichtbar bleibt -->
-          <polygon points="600,232 712,198 684,300" fill="#C79A22"/>
-          <polygon points="600,232 684,300 636,352" fill="#8A6B14"/>
-          <polygon points="684,300 636,352 700,330" fill="#6B520E"/>
-          <polygon points="196,346 300,312 276,404" fill="#B88E1F"/>
-          <polygon points="196,346 276,404 232,452" fill="#7E620F"/>
-          <polygon points="864,392 946,368 930,452" fill="#A98420"/>
-          <polygon points="864,392 930,452 892,486" fill="#71570D"/>
-        </g>
+        <g class="wall__panels wall__layer" data-depth="6"></g>
+        <g class="wall__vols wall__layer" data-depth="14"></g>
         <g class="wall__holds wall__layer" data-depth="22"></g>
       </svg>
       <div class="wall__grain" aria-hidden="true"></div>
@@ -93,8 +92,10 @@
         <button type="button" class="chip" data-route="blau"><span class="chip__dot" style="--c:var(--r-blau)" aria-hidden="true"></span>Blau</button>
         <button type="button" class="chip" data-route="pink"><span class="chip__dot" style="--c:var(--r-pink)" aria-hidden="true"></span>Pink</button>
         <button type="button" class="chip" data-route="lila"><span class="chip__dot" style="--c:var(--r-lila)" aria-hidden="true"></span>Lila</button>
+        <button type="button" class="chip" data-route="beige"><span class="chip__dot" style="--c:var(--r-beige)" aria-hidden="true"></span>Beige</button>
+        <button type="button" class="chip" data-route="schwarz"><span class="chip__dot chip__dot--schwarz" aria-hidden="true"></span>Schwarz</button>
       </div>
-      <p class="wall__readout" aria-live="polite"><span data-readout-count>128</span> Griffe sichtbar <span class="sep" aria-hidden="true">/</span> <span data-readout-route>alle Routen</span></p>
+      <p class="wall__readout" aria-live="polite"><span data-readout-count>0</span> Griffe sichtbar <span class="sep" aria-hidden="true">/</span> <span data-readout-route>alle Routen</span></p>
     </figcaption>
   </figure>
 </section>
@@ -248,6 +249,7 @@
   </div>
 </footer>
 
+<script src="assets/wall-data.js"></script>
 <script src="assets/site.js"></script>
 </body>
 </html>

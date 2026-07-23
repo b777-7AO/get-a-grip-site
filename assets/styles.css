@@ -107,22 +107,18 @@ a { color: inherit; }
 
 /* ---------- Hero ---------- */
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  gap: clamp(28px, 4vw, 64px);
-  align-items: center;
   width: min(100% - calc(var(--pad) * 2), 1320px);
   margin-inline: auto;
-  padding: clamp(40px, 7vw, 96px) 0 clamp(48px, 8vw, 104px);
+  padding: clamp(40px, 6vw, 84px) 0 clamp(48px, 8vw, 104px);
 }
-@media (max-width: 940px) { .hero { grid-template-columns: 1fr; } }
+.hero__text { max-width: 60rem; }
 
 .eyebrow {
   font-family: var(--mono); font-size: 12px; letter-spacing: .18em;
   text-transform: uppercase; color: var(--tape); margin-bottom: 22px;
 }
 .hero h1 {
-  font-size: clamp(46px, 7.2vw, 104px);
+  font-size: clamp(42px, 5.6vw, 84px);
 }
 .hero h1 em {
   font-style: normal;
@@ -137,7 +133,7 @@ a { color: inherit; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 
 /* ---------- Wall figure ---------- */
-.wall { margin: 0; }
+.wall { margin: clamp(32px, 4vw, 56px) 0 0; }
 .wall__frame {
   position: relative;
   border-radius: 18px;
@@ -155,10 +151,12 @@ a { color: inherit; }
 .wall__layer { transition: transform .5s cubic-bezier(.22,.61,.36,1); will-change: transform; }
 
 .hold { cursor: pointer; transition: opacity .35s ease, transform .35s ease; }
+.vol { transition: opacity .35s ease; }
 .hold__ring { opacity: 0; transition: opacity .3s ease; }
-.wall__holds.is-filtered .hold { opacity: .09; }
-.wall__holds.is-filtered .hold.is-on { opacity: 1; }
-.wall__holds.is-filtered .hold.is-on .hold__ring { opacity: .85; }
+.wall__svg.is-filtered .hold { opacity: .08; }
+.wall__svg.is-filtered .vol { opacity: .3; }
+.wall__svg.is-filtered .hold.is-on { opacity: 1; }
+.wall__svg.is-filtered .hold.is-on .hold__ring { opacity: .85; }
 
 .wall__ui {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
@@ -179,6 +177,7 @@ a { color: inherit; }
   background: conic-gradient(var(--r-gelb) 0 25%, var(--r-gruen) 0 50%, var(--r-blau) 0 75%, var(--r-pink) 0);
   border-radius: 999px; transform: none;
 }
+.chip__dot--schwarz { background: #31363D; box-shadow: inset 0 0 0 1px rgba(239,236,228,.5); }
 .wall__readout { font-family: var(--mono); font-size: 12.5px; color: rgba(239,236,228,.5); }
 .wall__readout .sep { color: rgba(239,236,228,.25); padding: 0 4px; }
 
